@@ -44,95 +44,19 @@
                 </button>
             </div>
         </div>
-    </header>
-
-    <!-- Main Content -->
+    </header>    <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 max-w-md">
         <!-- Profile Section -->
-        <div class="text-center mb-8">
-            <div class="relative inline-block mb-4">
-                <img src="https://ui-avatars.com/api/?name=Bee+Links&background=FFD700&color=1A1A1A&bold=true&size=200" 
-                     alt="Profile Picture" 
-                     class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-bee-yellow shadow-lg mx-auto object-cover">
-                <div class="absolute -bottom-1 -right-1 bg-bee-yellow rounded-full p-2">
-                    <i class="fas fa-bee text-bee-black text-sm"></i>
-                </div>
-            </div>
-            <h2 class="dark:text-white text-bee-black text-xl sm:text-2xl font-semibold mb-2">@seuusuario</h2>
-            <p class="dark:text-gray-300 text-gray-600 text-sm sm:text-base mb-4">Desenvolvedor | Criador de Conteúdo | Tech Enthusiast</p>
-            <div class="flex justify-center space-x-4 dark:text-gray-400 text-gray-500 text-sm">
-                <span><i class="fas fa-eye mr-1"></i>1.2k visualizações</span>
-                <span><i class="fas fa-mouse-pointer mr-1"></i>234 cliques</span>
-            </div>
+        <div class="text-center mb-8" id="profileContainer">
+            <!-- Profile será renderizado via JavaScript -->
         </div>
-
-        <!-- Links Section -->
-        <div class="space-y-4 mb-8">
-            <!-- Link Item -->
-            <a href="#" class="link-item block dark:bg-bee-gray bg-bee-white hover:bg-bee-yellow hover:text-bee-black transition-all duration-300 rounded-xl p-4 border-2 border-transparent hover:border-bee-yellow group shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bee-yellow text-bee-black p-3 rounded-lg group-hover:bg-bee-black group-hover:text-bee-yellow transition-colors duration-300">
-                        <i class="fab fa-github text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="dark:text-white text-bee-black group-hover:text-bee-black font-semibold text-lg">GitHub</h3>
-                        <p class="dark:text-gray-400 text-gray-500 group-hover:text-bee-gray text-sm">Confira meus projetos</p>
-                    </div>
-                    <i class="fas fa-external-link-alt dark:text-gray-400 text-gray-500 group-hover:text-bee-black"></i>
-                </div>
-            </a>
-
-            <a href="#" class="link-item block dark:bg-bee-gray bg-bee-white hover:bg-bee-yellow hover:text-bee-black transition-all duration-300 rounded-xl p-4 border-2 border-transparent hover:border-bee-yellow group shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bee-yellow text-bee-black p-3 rounded-lg group-hover:bg-bee-black group-hover:text-bee-yellow transition-colors duration-300">
-                        <i class="fab fa-linkedin text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="dark:text-white text-bee-black group-hover:text-bee-black font-semibold text-lg">LinkedIn</h3>
-                        <p class="dark:text-gray-400 text-gray-500 group-hover:text-bee-gray text-sm">Conecte-se comigo</p>
-                    </div>
-                    <i class="fas fa-external-link-alt dark:text-gray-400 text-gray-500 group-hover:text-bee-black"></i>
-                </div>
-            </a>
-
-            <a href="#" class="link-item block dark:bg-bee-gray bg-bee-white hover:bg-bee-yellow hover:text-bee-black transition-all duration-300 rounded-xl p-4 border-2 border-transparent hover:border-bee-yellow group shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bee-yellow text-bee-black p-3 rounded-lg group-hover:bg-bee-black group-hover:text-bee-yellow transition-colors duration-300">
-                        <i class="fas fa-globe text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="dark:text-white text-bee-black group-hover:text-bee-black font-semibold text-lg">Portfólio</h3>
-                        <p class="dark:text-gray-400 text-gray-500 group-hover:text-bee-gray text-sm">Veja meu trabalho</p>
-                    </div>
-                    <i class="fas fa-external-link-alt dark:text-gray-400 text-gray-500 group-hover:text-bee-black"></i>
-                </div>
-            </a>
-
-            <a href="#" class="link-item block dark:bg-bee-gray bg-bee-white hover:bg-bee-yellow hover:text-bee-black transition-all duration-300 rounded-xl p-4 border-2 border-transparent hover:border-bee-yellow group shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bee-yellow text-bee-black p-3 rounded-lg group-hover:bg-bee-black group-hover:text-bee-yellow transition-colors duration-300">
-                        <i class="fab fa-youtube text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="dark:text-white text-bee-black group-hover:text-bee-black font-semibold text-lg">YouTube</h3>
-                        <p class="dark:text-gray-400 text-gray-500 group-hover:text-bee-gray text-sm">Tutoriais e conteúdo</p>
-                    </div>
-                    <i class="fas fa-external-link-alt dark:text-gray-400 text-gray-500 group-hover:text-bee-black"></i>
-                </div>
-            </a>
-
-            <a href="#" class="link-item block dark:bg-bee-gray bg-bee-white hover:bg-bee-yellow hover:text-bee-black transition-all duration-300 rounded-xl p-4 border-2 border-transparent hover:border-bee-yellow group shadow-md">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-bee-yellow text-bee-black p-3 rounded-lg group-hover:bg-bee-black group-hover:text-bee-yellow transition-colors duration-300">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="dark:text-white text-bee-black group-hover:text-bee-black font-semibold text-lg">Instagram</h3>
-                        <p class="dark:text-gray-400 text-gray-500 group-hover:text-bee-gray text-sm">Acompanhe meu dia a dia</p>
-                    </div>
-                    <i class="fas fa-external-link-alt dark:text-gray-400 text-gray-500 group-hover:text-bee-black"></i>
-                </div>
-            </a>
+        
+        <!-- Stats Section -->
+        <div class="flex justify-center space-x-4 dark:text-gray-400 text-gray-500 text-sm mb-8" id="statsContainer">
+            <!-- Stats serão renderizadas via JavaScript -->
+        </div>        <!-- Links Section -->
+        <div class="space-y-4 mb-8" id="linksContainer">
+            <!-- Links serão renderizados via JavaScript -->
         </div>
 
         <!-- Social Media Icons -->
@@ -167,11 +91,93 @@
             </p>
             <p class="dark:text-gray-500 text-gray-600 text-xs">
                 © 2024 BeeLinks - Todos os direitos reservados
-            </p>
-        </div>
+            </p>        </div>
     </footer>
 
-    <!-- JavaScript for future enhancements -->
-    <script src="script.js"></script>
+    <!-- Modal para Adicionar Link -->
+    <div id="addLinkModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="dark:bg-bee-gray bg-white rounded-xl p-6 w-full max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="dark:text-white text-bee-black text-xl font-semibold">Adicionar Novo Link</h3>
+                <button id="closeModal" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="linkForm" class="space-y-4">
+                <div>
+                    <label for="title" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Título *
+                    </label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        required
+                        placeholder="Ex: GitHub"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                
+                <div>
+                    <label for="url" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        URL *
+                    </label>
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        name="url" 
+                        required
+                        placeholder="https://github.com/seuusuario"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                
+                <div>
+                    <label for="description" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Descrição *
+                    </label>
+                    <input 
+                        type="text" 
+                        id="description" 
+                        name="description" 
+                        required
+                        placeholder="Ex: Confira meus projetos"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                  <div class="hidden" id="iconPreviewContainer">
+                    <label class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Ícone Detectado
+                    </label>
+                    <div class="flex items-center space-x-2 p-3 dark:bg-bee-black bg-gray-50 rounded-lg">
+                        <div id="iconPreviewWrapper">
+                            <i id="iconPreview" class="fas fa-link text-xl text-bee-yellow"></i>
+                        </div>
+                        <span class="dark:text-gray-300 text-gray-600 text-sm">Ícone será detectado automaticamente</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3 pt-4">
+                    <button 
+                        type="button" 
+                        id="cancelBtn"
+                        class="flex-1 px-4 py-2 dark:bg-gray-600 bg-gray-300 dark:text-white text-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="flex-1 px-4 py-2 bg-bee-yellow text-bee-black rounded-lg hover:bg-bee-dark-yellow transition-colors font-medium"
+                    >
+                        Adicionar Link
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript para funcionalidades -->
+    <script type="module" src="src/main.js"></script>
 </body>
 </html>
