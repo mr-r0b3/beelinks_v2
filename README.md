@@ -17,6 +17,8 @@ BeeLinks é um agregador de links pessoal desenvolvido como MVP para a disciplin
 ### 🔧 Funcionalidades Principais
 - ✅ Adicionar/remover links personalizados
 - ✅ Detecção automática de ícones baseada na URL
+- ✅ **Fotos de perfil aleatórias** que mudam a cada atualização
+- ✅ **Botão para gerar nova foto** manualmente
 - ✅ Contagem de cliques por link
 - ✅ Estatísticas de visualizações totais
 - ✅ Alternância entre tema claro e escuro

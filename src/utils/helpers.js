@@ -1,5 +1,7 @@
 // Utilitários diversos para a aplicação
 
+import { CONFIG } from '../config.js';
+
 // Função para gerar IDs únicos (caso crypto.randomUUID não esteja disponível)
 export const generateId = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {

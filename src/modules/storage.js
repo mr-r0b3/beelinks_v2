@@ -1,5 +1,7 @@
 // Módulo para gerenciar dados no LocalStorage
 
+import { generateRandomProfilePhoto } from '../utils/helpers.js';
+
 const STORAGE_KEYS = {
   LINKS: 'beelinks_links',
   PROFILE: 'beelinks_profile',
@@ -46,14 +48,25 @@ export const loadLinks = () =>
 export const saveProfile = (profile) => 
   saveToStorage(STORAGE_KEYS.PROFILE, profile);
 
-export const loadProfile = () => 
-  loadFromStorage(STORAGE_KEYS.PROFILE, {
+export const loadProfile = () => {
+  const defaultProfile = {
     username: 'seuusuario',
     bio: 'Desenvolvedor | Criador de Conteúdo | Tech Enthusiast',
-    avatar: 'https://ui-avatars.com/api/?name=Bee+Links&background=FFD700&color=1A1A1A&bold=true&size=200',
+    avatar: generateRandomProfilePhoto(), // Gera uma foto aleatória
     views: 0,
     totalClicks: 0
-  });
+  };
+  
+  const savedProfile = loadFromStorage(STORAGE_KEYS.PROFILE, defaultProfile);
+  
+  // Sempre gerar uma nova foto aleatória a cada carregamento
+  savedProfile.avatar = generateRandomProfilePhoto();
+  
+  // Salvar o perfil atualizado
+  saveProfile(savedProfile);
+  
+  return savedProfile;
+};
 
 export const saveTheme = (theme) => 
   saveToStorage(STORAGE_KEYS.THEME, theme);

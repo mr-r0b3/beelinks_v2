@@ -78,6 +78,9 @@ const setupEventListeners = () => {
   
   // Preview de URL em tempo real
   setupUrlPreview();
+  
+  // Configurar event listeners para remoção de links
+  setupDeleteLinkListeners();
 };
 
 // Configurar submissão do formulário
@@ -220,4 +223,128 @@ window.BeeLinks = {
   toggleTheme,
   renderLinks,
   showNotification
+};
+
+// Configurar event listeners para remoção de links (delegação de eventos)
+const setupDeleteLinkListeners = () => {
+  // Usar delegação de eventos no container principal
+  const linksContainer = document.querySelector('#linksContainer');
+  
+  if (linksContainer) {
+    linksContainer.addEventListener('click', (e) => {
+      // Verificar se o clique foi em um botão de deletar
+      const deleteBtn = e.target.closest('[data-delete-id]');
+      
+      if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const linkId = deleteBtn.dataset.deleteId;
+        handleDeleteLink(linkId);
+      }
+    });
+  }
+};
+
+// Função para lidar com a remoção de link
+const handleDeleteLink = (linkId) => {
+  const links = loadLinks();
+  const linkToDelete = links.find(link => link.id === linkId);
+  
+  if (!linkToDelete) {
+    showNotification('Link não encontrado!', 'error');
+    return;
+  }
+  
+  // Criar modal de confirmação
+  showConfirmDeleteModal(linkId, linkToDelete);
+};
+
+// Função para mostrar modal de confirmação de exclusão
+const showConfirmDeleteModal = (linkId, linkData) => {
+  const confirmModal = document.createElement('div');
+  confirmModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-fade-in';
+  confirmModal.innerHTML = `
+    <div class="bg-white dark:bg-bee-gray rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl transform transition-all duration-300 scale-95 animate-scale-in">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 mb-4">
+          <i class="fas fa-trash text-red-600 dark:text-red-400 text-xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Confirmar exclusão</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-2">
+          Tem certeza que deseja remover o link:
+        </p>
+        <p class="font-semibold text-bee-yellow mb-4">"${linkData.title}"</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Esta ação não pode ser desfeita.</p>
+        
+        <div class="flex justify-center space-x-3">
+          <button id="cancelDelete" 
+                  class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors duration-200">
+            <i class="fas fa-times mr-2"></i>Cancelar
+          </button>
+          <button id="confirmDelete" 
+                  class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200">
+            <i class="fas fa-trash mr-2"></i>Remover
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(confirmModal);
+  document.body.style.overflow = 'hidden';
+  
+  // Event listeners do modal
+  const cancelBtn = confirmModal.querySelector('#cancelDelete');
+  const confirmBtn = confirmModal.querySelector('#confirmDelete');
+  
+  const closeModal = () => {
+    document.body.removeChild(confirmModal);
+    document.body.style.overflow = 'auto';
+  };
+  
+  cancelBtn.addEventListener('click', closeModal);
+  
+  confirmBtn.addEventListener('click', () => {
+    confirmDeleteLink(linkId, linkData.title);
+    closeModal();
+  });
+  
+  // Fechar ao clicar fora
+  confirmModal.addEventListener('click', (e) => {
+    if (e.target === confirmModal) closeModal();
+  });
+  
+  // Fechar com tecla ESC
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+      document.removeEventListener('keydown', handleEscape);
+    }
+  };
+  
+  document.addEventListener('keydown', handleEscape);
+};
+
+// Função para confirmar e executar a exclusão
+const confirmDeleteLink = (linkId, linkTitle) => {
+  const links = loadLinks();
+  const updatedLinks = links.filter(link => link.id !== linkId);
+  
+  // Salvar links atualizados
+  saveLinks(updatedLinks);
+  
+  // Atualizar estado da aplicação
+  appState.links = updatedLinks;
+  
+  // Re-renderizar a lista de links
+  renderLinks();
+  
+  // Atualizar estatísticas
+  updatePageViews();
+  
+  // Mostrar notificação de sucesso
+  showNotification(`✅ Link "${linkTitle}" removido com sucesso!`, 'success');
+  
+  console.log(`🗑️ Link "${linkTitle}" removido com sucesso!`);
 };
