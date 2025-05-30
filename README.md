@@ -1,4 +1,6 @@
 # 🐝 BeeLinks - Agregador de Links Pessoal
+## Preview
+![image](https://github.com/user-attachments/assets/ca7cb7a6-27dd-4dc4-afbc-4d46f10fe19b)
 
 ## 📋 Sobre o Projeto
 
