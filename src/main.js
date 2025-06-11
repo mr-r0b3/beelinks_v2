@@ -1,6 +1,9 @@
 // Arquivo principal da aplicação BeeLinks
 // Importa todos os módulos necessários
 
+import '../styles.css';
+import './style.css';
+
 import { 
   renderLinks, 
   renderStats, 

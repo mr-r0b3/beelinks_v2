@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos customizados podem ser adicionados abaixo */
+
 /* Estilos adicionais para BeeLinks */
 
 /* Animações personalizadas */

@@ -1,18 +1,15 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  root: '.',
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+  css: {
+    postcss: true
   },
   server: {
     port: 3000,
     open: true
   },
-  resolve: {
-    alias: {
-      '@': '/src'
-    }
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
   }
 })
