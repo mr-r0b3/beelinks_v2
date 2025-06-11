@@ -9,7 +9,6 @@ const STORAGE_KEYS = {
   STATS: 'beelinks_stats'
 };
 
-// Funções puras para LocalStorage
 export const saveToStorage = (key, data) => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
@@ -38,7 +37,6 @@ export const removeFromStorage = (key) => {
   }
 };
 
-// Funções específicas para o BeeLinks
 export const saveLinks = (links) => 
   saveToStorage(STORAGE_KEYS.LINKS, links);
 
@@ -52,17 +50,13 @@ export const loadProfile = () => {
   const defaultProfile = {
     username: 'seuusuario',
     bio: 'Desenvolvedor | Criador de Conteúdo | Tech Enthusiast',
-    avatar: generateRandomProfilePhoto(), // Gera uma foto aleatória
+    avatar: generateRandomProfilePhoto(),
     views: 0,
     totalClicks: 0
   };
   
   const savedProfile = loadFromStorage(STORAGE_KEYS.PROFILE, defaultProfile);
-  
-  // Sempre gerar uma nova foto aleatória a cada carregamento
   savedProfile.avatar = generateRandomProfilePhoto();
-  
-  // Salvar o perfil atualizado
   saveProfile(savedProfile);
   
   return savedProfile;

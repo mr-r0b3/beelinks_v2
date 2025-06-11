@@ -23,55 +23,64 @@
                 </button>
             </div>
         </div>
-    </header>    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8 max-w-md">
-        <!-- Profile Section -->
-        <div class="text-center mb-8" id="profileContainer">
-            <!-- Profile será renderizado via JavaScript -->
-        </div>
-        
-        <!-- Stats Section -->
-        <div class="flex justify-center space-x-4 dark:text-gray-400 text-gray-500 text-sm mb-8" id="statsContainer">
-            <!-- Stats serão renderizadas via JavaScript -->
-        </div>        <!-- Links Section -->
-        <div class="space-y-4 mb-8" id="linksContainer">
-            <!-- Links serão renderizados via JavaScript -->
-        </div>
+    </header>
+    
+    <!-- Main Container -->
+    <div class="min-h-[calc(100vh-64px)] bg-gradient-to-b from-transparent to-bee-yellow/5 dark:to-bee-yellow/10">
+        <div class="container mx-auto px-4 py-8 max-w-2xl h-full flex flex-col">
+            <!-- Main Content -->
+            <main class="flex-grow">
+                <!-- Profile Section -->
+                <div class="text-center mb-8" id="profileContainer">
+                    <!-- Profile será renderizado via JavaScript -->
+                </div>
+                
+                <!-- Stats Section -->
+                <div class="flex justify-center space-x-4 dark:text-gray-400 text-gray-500 text-sm mb-8" id="statsContainer">
+                    <!-- Stats serão renderizadas via JavaScript -->
+                </div>
+                
+                <!-- Links Section -->
+                <div class="space-y-4 mb-8" id="linksContainer">
+                    <!-- Links serão renderizados via JavaScript -->
+                </div>
 
-        <!-- Social Media Icons -->
-        <div class="flex justify-center space-x-6 mb-8">
-            <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
-                <i class="fab fa-twitter text-2xl"></i>
-            </a>
-            <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
-                <i class="fab fa-discord text-2xl"></i>
-            </a>
-            <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
-                <i class="fab fa-telegram text-2xl"></i>
-            </a>
-            <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
-                <i class="fas fa-envelope text-2xl"></i>
-            </a>
-        </div>
+                <!-- Social Media Icons -->
+                <div class="flex justify-center space-x-6 mb-8">
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-discord text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-telegram text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fas fa-envelope text-2xl"></i>
+                    </a>
+                </div>
 
-        <!-- Add Link Button (for future JS functionality) -->
-        <div class="text-center">
-            <button id="addLinkBtn" class="bg-bee-yellow hover:bg-bee-dark-yellow text-bee-black font-semibold py-3 px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl">
-                <i class="fas fa-plus mr-2"></i>Adicionar Link
-            </button>
-        </div>
-    </main>
+                <!-- Add Link Button (for future JS functionality) -->
+                <div class="text-center">
+                    <button id="addLinkBtn" class="bg-bee-yellow hover:bg-bee-dark-yellow text-bee-black font-semibold py-3 px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus mr-2"></i>Adicionar Link
+                    </button>
+                </div>
+            </main>
 
-    <!-- Footer -->
-    <footer class="dark:bg-bee-gray bg-bee-white mt-12 py-6">
-        <div class="container mx-auto px-4 text-center">
-            <p class="dark:text-gray-400 text-gray-500 text-sm mb-2">
-                Feito com <i class="fas fa-heart text-bee-yellow"></i> usando BeeLinks
-            </p>
-            <p class="dark:text-gray-500 text-gray-600 text-xs">
-                © 2024 BeeLinks - Todos os direitos reservados
-            </p>        </div>
-    </footer>
+            <!-- Footer -->
+            <footer class="dark:bg-bee-gray/50 bg-bee-white/50 py-6 mt-auto rounded-xl">
+                <div class="container mx-auto px-4 text-center">
+                    <p class="dark:text-gray-400 text-gray-500 text-sm mb-2">
+                        Feito com <i class="fas fa-heart text-bee-yellow"></i> usando BeeLinks
+                    </p>
+                    <p class="dark:text-gray-500 text-gray-600 text-xs">
+                        © 2024 BeeLinks - Todos os direitos reservados
+                    </p>        </div>
+            </footer>
+        </div>
+    </div>
 
     <!-- Modal para Adicionar Link -->
     <div id="addLinkModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">

@@ -1,6 +1,3 @@
-// Módulo para gerenciar dados do LocalStorage usando programação funcional
-
-// Funções puras para manipular dados de links
 export const createLink = (title, url, description, icon = 'fas fa-link') => ({
   id: crypto.randomUUID(),
   title: title.trim(),
@@ -46,7 +43,6 @@ const isValidUrl = (string) => {
   }
 };
 
-// Funções para manipular coleções de links
 export const sortLinksByDate = (links) => 
   [...links].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 

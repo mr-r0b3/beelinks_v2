@@ -1,24 +1,15 @@
-// Configurações do BeeLinks
 export const CONFIG = {
-  // Configurações de fotos
   photos: {
-    // Tipos de foto disponíveis
     types: ['unsplash', 'picsum', 'avatar'],
-    
-    // Preferências por tipo (0-1, onde 1 = sempre usar)
     preferences: {
-      unsplash: 0.5,  // 50% chance
-      picsum: 0.3,    // 30% chance  
-      avatar: 0.2     // 20% chance
+      unsplash: 0.5,
+      picsum: 0.3,   
+      avatar: 0.2    
     },
-    
-    // Categorias do Unsplash para fotos de perfil
     unsplashCategories: [
       'person', 'portrait', 'face', 'people', 
       'business', 'professional', 'headshot'
     ],
-    
-    // Cores para avatars
     avatarColors: {
       backgrounds: [
         'FFD700', 'FFC107', 'FF9800', 'F44336', 
@@ -29,27 +20,21 @@ export const CONFIG = {
     }
   },
   
-  // Configurações da aplicação
   app: {
     name: 'BeeLinks',
     version: '1.0.0',
     description: 'Seus Links em um Só Lugar',
-    
-    // Configurações de notificação
     notifications: {
-      duration: 3000, // 3 segundos
+      duration: 3000,
       position: 'top-right'
     },
-    
-    // Configurações de animação
     animations: {
       duration: 300,
       easing: 'ease-out',
-      stagger: 100 // delay entre animações
+      stagger: 100
     }
   },
   
-  // Configurações padrão do perfil
   defaultProfile: {
     username: 'seuusuario',
     bio: 'Desenvolvedor | Criador de Conteúdo | Tech Enthusiast',
@@ -59,7 +44,5 @@ export const CONFIG = {
       { name: 'Telegram', icon: 'fab fa-telegram', url: '#' },
       { name: 'Email', icon: 'fas fa-envelope', url: '#' }
     ]
-  },
-  
-  // URLs e APIs externas
+  }
 }

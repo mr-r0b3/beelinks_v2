@@ -1,6 +1,3 @@
-// Arquivo principal da aplicação BeeLinks
-// Importa todos os módulos necessários
-
 import '../styles.css';
 import './style.css';
 
@@ -34,39 +31,24 @@ import {
   isValidURL 
 } from './utils/helpers.js';
 
-// Estado da aplicação
 let appState = {
   links: [],
   isLoading: false
 };
 
-// Função principal de inicialização
 const initializeApp = () => {
   console.log('🐝 Inicializando BeeLinks...');
-  
-  // Carregar dados do localStorage
   appState.links = loadLinks();
-  
-  // Inicializar tema
   initializeTheme();
-  
-  // Renderizar componentes
   renderProfile();
   renderStats();
   renderLinks();
-  
-  // Configurar event listeners
   setupEventListeners();
-  
-  // Incrementar visualizações
   updatePageViews();
-  
   console.log('✅ BeeLinks inicializado com sucesso!');
 };
 
-// Configurar todos os event listeners
 const setupEventListeners = () => {
-  // Toggle de tema
   const themeToggle = document.querySelector('#themeToggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', () => {
@@ -74,22 +56,14 @@ const setupEventListeners = () => {
       showNotification(`Tema ${newTheme === 'dark' ? 'escuro' : 'claro'} ativado!`);
     });
   }
-  
-  // Configurar formulário de adicionar link
   setupAddLinkForm();
   setupLinkFormSubmission();
-  
-  // Preview de URL em tempo real
   setupUrlPreview();
-  
-  // Configurar event listeners para remoção de links
   setupDeleteLinkListeners();
 };
 
-// Configurar submissão do formulário
 const setupLinkFormSubmission = () => {
   const linkForm = document.querySelector('#linkForm');
-  
   if (linkForm) {
     linkForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -98,7 +72,6 @@ const setupLinkFormSubmission = () => {
   }
 };
 
-// Função para adicionar um novo link
 const handleAddLink = (e) => {
   const formData = new FormData(e.target);
   const title = formData.get('title');
@@ -106,7 +79,6 @@ const handleAddLink = (e) => {
   const description = formData.get('description');
   const icon = formData.get('icon') || detectIconFromUrl(url);
   
-  // Validar dados
   const newLink = createLink(title, url, description, icon);
   const validation = validateLink(newLink);
   
@@ -115,28 +87,20 @@ const handleAddLink = (e) => {
     return;
   }
   
-  // Adicionar link à lista
   appState.links = [newLink, ...appState.links];
   saveLinks(appState.links);
-  
-  // Atualizar interface
   renderLinks();
   
-  // Fechar modal
   const modal = document.querySelector('#addLinkModal');
   if (modal) {
     modal.classList.add('hidden');
     document.body.style.overflow = 'auto';
   }
   
-  // Limpar formulário
   e.target.reset();
-  
-  // Mostrar notificação
   showNotification('Link adicionado com sucesso!');
 };
 
-// Configurar preview de URL
 const setupUrlPreview = () => {
   const urlInput = document.querySelector('#urlInput');
   const iconPreview = document.querySelector('#iconPreview');
@@ -155,7 +119,6 @@ const setupUrlPreview = () => {
   }
 };
 
-// Atualizar visualizações da página
 const updatePageViews = () => {
   const stats = loadStats();
   const updatedStats = {
@@ -168,42 +131,16 @@ const updatePageViews = () => {
   renderStats();
 };
 
-// Função para popular dados iniciais (apenas para demonstração)
 const populateInitialData = () => {
   const currentLinks = loadLinks();
   
   if (currentLinks.length === 0) {
     const initialLinks = [
-      createLink(
-        'GitHub',
-        'https://github.com',
-        'Confira meus projetos',
-        'fab fa-github'
-      ),
-      createLink(
-        'LinkedIn',
-        'https://linkedin.com',
-        'Conecte-se comigo',
-        'fab fa-linkedin'
-      ),
-      createLink(
-        'Portfólio',
-        'https://meuportfolio.com',
-        'Veja meu trabalho',
-        'fas fa-globe'
-      ),
-      createLink(
-        'YouTube',
-        'https://youtube.com',
-        'Tutoriais e conteúdo',
-        'fab fa-youtube'
-      ),
-      createLink(
-        'Instagram',
-        'https://instagram.com',
-        'Acompanhe meu dia a dia',
-        'fab fa-instagram'
-      )
+      createLink('GitHub', 'https://github.com', 'Confira meus projetos', 'fab fa-github'),
+      createLink('LinkedIn', 'https://linkedin.com', 'Conecte-se comigo', 'fab fa-linkedin'),
+      createLink('Portfólio', 'https://meuportfolio.com', 'Veja meu trabalho', 'fas fa-globe'),
+      createLink('YouTube', 'https://youtube.com', 'Tutoriais e conteúdo', 'fab fa-youtube'),
+      createLink('Instagram', 'https://instagram.com', 'Acompanhe meu dia a dia', 'fab fa-instagram')
     ];
     
     saveLinks(initialLinks);
@@ -211,16 +148,11 @@ const populateInitialData = () => {
   }
 };
 
-// Inicializar aplicação quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', () => {
-  // Popular dados iniciais apenas na primeira execução
   populateInitialData();
-  
-  // Inicializar aplicação
   initializeApp();
 });
 
-// Exportar funções para uso global (se necessário)
 window.BeeLinks = {
   addLink: handleAddLink,
   toggleTheme,
@@ -228,20 +160,16 @@ window.BeeLinks = {
   showNotification
 };
 
-// Configurar event listeners para remoção de links (delegação de eventos)
 const setupDeleteLinkListeners = () => {
-  // Usar delegação de eventos no container principal
   const linksContainer = document.querySelector('#linksContainer');
   
   if (linksContainer) {
     linksContainer.addEventListener('click', (e) => {
-      // Verificar se o clique foi em um botão de deletar
       const deleteBtn = e.target.closest('[data-delete-id]');
       
       if (deleteBtn) {
         e.preventDefault();
         e.stopPropagation();
-        
         const linkId = deleteBtn.dataset.deleteId;
         handleDeleteLink(linkId);
       }
@@ -249,7 +177,6 @@ const setupDeleteLinkListeners = () => {
   }
 };
 
-// Função para lidar com a remoção de link
 const handleDeleteLink = (linkId) => {
   const links = loadLinks();
   const linkToDelete = links.find(link => link.id === linkId);
@@ -259,11 +186,9 @@ const handleDeleteLink = (linkId) => {
     return;
   }
   
-  // Criar modal de confirmação
   showConfirmDeleteModal(linkId, linkToDelete);
 };
 
-// Função para mostrar modal de confirmação de exclusão
 const showConfirmDeleteModal = (linkId, linkData) => {
   const confirmModal = document.createElement('div');
   confirmModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-fade-in';
@@ -297,7 +222,6 @@ const showConfirmDeleteModal = (linkId, linkData) => {
   document.body.appendChild(confirmModal);
   document.body.style.overflow = 'hidden';
   
-  // Event listeners do modal
   const cancelBtn = confirmModal.querySelector('#cancelDelete');
   const confirmBtn = confirmModal.querySelector('#confirmDelete');
   
@@ -313,12 +237,10 @@ const showConfirmDeleteModal = (linkId, linkData) => {
     closeModal();
   });
   
-  // Fechar ao clicar fora
   confirmModal.addEventListener('click', (e) => {
     if (e.target === confirmModal) closeModal();
   });
   
-  // Fechar com tecla ESC
   const handleEscape = (e) => {
     if (e.key === 'Escape') {
       closeModal();
@@ -329,25 +251,15 @@ const showConfirmDeleteModal = (linkId, linkData) => {
   document.addEventListener('keydown', handleEscape);
 };
 
-// Função para confirmar e executar a exclusão
 const confirmDeleteLink = (linkId, linkTitle) => {
   const links = loadLinks();
   const updatedLinks = links.filter(link => link.id !== linkId);
   
-  // Salvar links atualizados
   saveLinks(updatedLinks);
-  
-  // Atualizar estado da aplicação
   appState.links = updatedLinks;
-  
-  // Re-renderizar a lista de links
   renderLinks();
-  
-  // Atualizar estatísticas
   updatePageViews();
   
-  // Mostrar notificação de sucesso
   showNotification(`✅ Link "${linkTitle}" removido com sucesso!`, 'success');
-  
   console.log(`🗑️ Link "${linkTitle}" removido com sucesso!`);
 };
