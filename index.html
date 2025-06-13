@@ -2,11 +2,31 @@
 <html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeeLinks - Seus Links em um Só Lugar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>BeeLinks - Seus Links em um Só Lugar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'bee-yellow': '#FFD700',
+                        'bee-dark-yellow': '#FFC107',
+                        'bee-black': '#1A1A1A',
+                        'bee-gray': '#2D2D2D',
+                        'bee-light-gray': '#F5F5F5',
+                        'bee-white': '#FFFFFF'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script type="module" src="/src/main.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="./src/main.js"></script>
 </head>
 <body class="dark:bg-bee-black bg-bee-light-gray min-h-screen font-sans transition-colors duration-300">
     <!-- Header -->
