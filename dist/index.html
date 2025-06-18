@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeLinks - Seus Links em um Só Lugar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module" crossorigin src="/assets/index-DdlO0K0r.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-JECR8hVQ.css">
+</head>
+<body class="dark:bg-bee-black bg-bee-light-gray min-h-screen font-sans transition-colors duration-300">
+    <!-- Header -->
+    <header class="dark:bg-bee-gray bg-bee-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-link text-bee-yellow text-2xl"></i>
+                    <h1 class="text-bee-yellow text-2xl font-bold">BeeLinks</h1>
+                </div>
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="p-2 rounded-full bg-bee-yellow text-bee-black hover:bg-bee-dark-yellow transition-colors duration-300">
+                    <i id="themeIcon" class="fas fa-sun text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Container -->
+    <div class="min-h-[calc(100vh-64px)] bg-gradient-to-b from-transparent to-bee-yellow/5 dark:to-bee-yellow/10">
+        <div class="container mx-auto px-4 py-8 max-w-2xl h-full flex flex-col">
+            <!-- Main Content -->
+            <main class="flex-grow">
+                <!-- Profile Section -->
+                <div class="text-center mb-8" id="profileContainer">
+                    <!-- Profile será renderizado via JavaScript -->
+                </div>
+                
+                <!-- Stats Section -->
+                <div class="flex justify-center space-x-4 dark:text-gray-400 text-gray-500 text-sm mb-8" id="statsContainer">
+                    <!-- Stats serão renderizadas via JavaScript -->
+                </div>
+                
+                <!-- Links Section -->
+                <div class="space-y-4 mb-8" id="linksContainer">
+                    <!-- Links serão renderizados via JavaScript -->
+                </div>
+
+                <!-- Social Media Icons -->
+                <div class="flex justify-center space-x-6 mb-8">
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-twitter text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-discord text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fab fa-telegram text-2xl"></i>
+                    </a>
+                    <a href="#" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow transition-colors duration-300">
+                        <i class="fas fa-envelope text-2xl"></i>
+                    </a>
+                </div>
+
+                <!-- Add Link Button (for future JS functionality) -->
+                <div class="text-center">
+                    <button id="addLinkBtn" class="bg-bee-yellow hover:bg-bee-dark-yellow text-bee-black font-semibold py-3 px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus mr-2"></i>Adicionar Link
+                    </button>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="dark:bg-bee-gray/50 bg-bee-white/50 py-6 mt-auto rounded-xl">
+                <div class="container mx-auto px-4 text-center">
+                    <p class="dark:text-gray-400 text-gray-500 text-sm mb-2">
+                        Feito com <i class="fas fa-heart text-bee-yellow"></i> usando BeeLinks
+                    </p>
+                    <p class="dark:text-gray-500 text-gray-600 text-xs">
+                        © 2024 BeeLinks - Todos os direitos reservados
+                    </p>        </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Link -->
+    <div id="addLinkModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="dark:bg-bee-gray bg-white rounded-xl p-6 w-full max-w-md mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="dark:text-white text-bee-black text-xl font-semibold">Adicionar Novo Link</h3>
+                <button id="closeModal" class="dark:text-gray-400 text-gray-500 hover:text-bee-yellow">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="linkForm" class="space-y-4">
+                <div>
+                    <label for="title" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Título *
+                    </label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        required
+                        placeholder="Ex: GitHub"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                
+                <div>
+                    <label for="url" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        URL *
+                    </label>
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        name="url" 
+                        required
+                        placeholder="https://github.com/seuusuario"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                
+                <div>
+                    <label for="description" class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Descrição *
+                    </label>
+                    <input 
+                        type="text" 
+                        id="description" 
+                        name="description" 
+                        required
+                        placeholder="Ex: Confira meus projetos"
+                        class="w-full px-3 py-2 dark:bg-bee-black dark:text-white bg-gray-50 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                    >
+                </div>
+                  <div class="hidden" id="iconPreviewContainer">
+                    <label class="block dark:text-gray-300 text-gray-700 text-sm font-medium mb-2">
+                        Ícone Detectado
+                    </label>
+                    <div class="flex items-center space-x-2 p-3 dark:bg-bee-black bg-gray-50 rounded-lg">
+                        <div id="iconPreviewWrapper">
+                            <i id="iconPreview" class="fas fa-link text-xl text-bee-yellow"></i>
+                        </div>
+                        <span class="dark:text-gray-300 text-gray-600 text-sm">Ícone será detectado automaticamente</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3 pt-4">
+                    <button 
+                        type="button" 
+                        id="cancelBtn"
+                        class="flex-1 px-4 py-2 dark:bg-gray-600 bg-gray-300 dark:text-white text-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="flex-1 px-4 py-2 bg-bee-yellow text-bee-black rounded-lg hover:bg-bee-dark-yellow transition-colors font-medium"
+                    >
+                        Adicionar Link
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript para funcionalidades -->
+</body>
+</html>
