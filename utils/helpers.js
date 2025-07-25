@@ -1,4 +1,4 @@
-// Helper utilities for URL detection and other common functions
+
 
 export function detectPlatform(url) {
   const platforms = {

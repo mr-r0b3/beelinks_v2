@@ -1,10 +1,9 @@
-/** @type {import('tailwindcss').Config} */
+
 export default {
   content: [
-    "./index.html",
-    "./login.html",
-    "./signup.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {

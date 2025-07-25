@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Header from '../components/Header';
+import ProtectedRoute from '../components/ProtectedRoute';
 import Profile from '../components/Profile';
 import Stats from '../components/Stats';
 import SocialLinks from '../components/SocialLinks';
@@ -22,25 +23,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900 bg-gray-50 py-8 px-4">
-      <div className="max-w-md mx-auto">
-        <Header />
-        
-        <main>
-          <Profile />
-          <Stats />
-          <SocialLinks />
-          <AddLinkButton onClick={handleAddLinkClick} />
-          <LinksList />
-        </main>
+    <ProtectedRoute>
+      <div id="home-page" className="min-h-screen bg-bee-light-gray dark:bg-bee-black">
+        <div id="home-container" className="max-w-md mx-auto">
+          <Header />
+          
+          <main id="home-main">
+            <Profile />
+            <Stats />
+            <SocialLinks />
+            <AddLinkButton onClick={handleAddLinkClick} />
+            <LinksList />
+          </main>
 
-        <Footer />
-        
-        <AddLinkModal 
-          isOpen={showModal} 
-          onClose={handleCloseModal} 
-        />
+          <Footer />
+          
+          <AddLinkModal 
+            id="add-link-modal"
+            isOpen={showModal} 
+            onClose={handleCloseModal} 
+          />
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

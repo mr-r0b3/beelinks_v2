@@ -7,6 +7,10 @@ yarn-error.log*
 # Next.js
 .next/
 out/
+*.tsbuildinfo
+next-env.d.ts
+public/_next/
+.vercel/
 
 # Production builds
 dist/
@@ -58,9 +62,16 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# Parcel-bundler cache (https://parceljs.org/)
+# Cache files
 .cache
 .parcel-cache
+.next/cache/
+public/sw.js
+public/workbox-*.js
+public/worker-*.js
+public/sw.js.map
+public/workbox-*.js.map
+public/worker-*.js.map
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test

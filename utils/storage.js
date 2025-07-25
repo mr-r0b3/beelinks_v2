@@ -1,4 +1,4 @@
-// Storage utilities for localStorage operations
+
 
 export function loadProfile() {
   try {
