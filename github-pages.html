@@ -34,24 +34,16 @@
     
     <!-- CSS customizado -->
     <link rel="stylesheet" href="./styles.css">
-    
-    <!-- JavaScript principal -->
+      <!-- JavaScript principal -->
     <script type="module">
         // Configuração para GitHub Pages - imports absolutos
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 const { default: main } = await import('./src/main.js');
             } catch (error) {
-                console.warn('Usando fallback para GitHub Pages');
-                // Fallback direto via script tags se módulos falharem
-                document.body.innerHTML += `
-                    <script src="./src/modules/storage.js" type="module"></script>
-                    <script src="./src/modules/linkManager.js" type="module"></script>
-                    <script src="./src/modules/ui.js" type="module"></script>
-                    <script src="./src/modules/events.js" type="module"></script>
-                    <script src="./src/utils/helpers.js" type="module"></script>
-                    <script src="./src/main.js" type="module"></script>
-                `;
+                console.warn('Usando fallback para GitHub Pages', error);
+                // Fallback: carrega módulos individualmente
+                window.location.reload();
             }
         });
     </script>
