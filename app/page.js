@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { analyticsService, userService } from '../lib/supabase';
 import Header from '../components/Header';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Profile from '../components/Profile';
@@ -13,6 +14,34 @@ import Footer from '../components/Footer';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    // Registrar visualização do perfil
+    const trackProfileView = async () => {
+      try {
+        const user = await userService.getCurrentUser();
+        if (user) {
+          await analyticsService.trackProfileView(user.id);
+        }
+      } catch (error) {
+        console.error('Erro ao registrar visualização do perfil:', error);
+      }
+    };
+
+    trackProfileView();
+
+    // Listener para atualizar componentes quando links mudarem
+    const handleLinksUpdate = () => {
+      setRefreshKey(prev => prev + 1);
+    };
+
+    window.addEventListener('linksUpdated', handleLinksUpdate);
+
+    return () => {
+      window.removeEventListener('linksUpdated', handleLinksUpdate);
+    };
+  }, []);
 
   const handleAddLinkClick = () => {
     setShowModal(true);
@@ -29,11 +58,11 @@ export default function Home() {
           <Header />
           
           <main id="home-main">
-            <Profile />
-            <Stats />
+            <Profile key={`profile-${refreshKey}`} />
+            <Stats key={`stats-${refreshKey}`} />
             <SocialLinks />
             <AddLinkButton onClick={handleAddLinkClick} />
-            <LinksList />
+            <LinksList key={`links-${refreshKey}`} />
           </main>
 
           <Footer />

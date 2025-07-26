@@ -3,28 +3,74 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { authService, userService } from '../../lib/supabase';
 
 export default function Signup() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    username: '',
+    fullName: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    // Validações
     if (formData.password !== formData.confirmPassword) {
-      alert('As senhas não coincidem!');
+      setError('As senhas não coincidem');
+      setIsLoading(false);
       return;
     }
 
-    router.push('/login');
+    if (formData.password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Verificar se username está disponível
+      const isAvailable = await userService.isUsernameAvailable(formData.username);
+      if (!isAvailable) {
+        setError('Nome de usuário já está em uso');
+        setIsLoading(false);
+        return;
+      }
+
+      // Criar usuário
+      const { user, error: signUpError } = await authService.signUp(
+        formData.email,
+        formData.password,
+        {
+          username: formData.username,
+          full_name: formData.fullName
+        }
+      );
+
+      if (signUpError) throw signUpError;
+
+      if (user) {
+        // Usuário criado com sucesso
+        alert('Conta criada com sucesso! Verifique seu email para confirmar a conta.');
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Erro ao criar conta:', error);
+      setError(error.message || 'Erro ao criar conta. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bee-light-gray dark:bg-bee-black">
+    <div className="min-h-screen flex items-center justify-center bg-bee-light-gray dark:bg-bee-black py-8">
       <div className="bg-bee-white dark:bg-bee-gray p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
@@ -34,18 +80,41 @@ export default function Signup() {
           <h2 className="text-xl font-semibold dark:text-white">Criar nova conta</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-              Nome de usuário
+              Nome Completo
+            </label>
+            <input
+              type="text"
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+              Nome de Usuário
             </label>
             <input
               type="text"
               value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow"
+              onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              disabled={isLoading}
+              placeholder="seu_usuario"
               required
             />
+            <p className="text-xs text-gray-500 mt-1">Apenas letras minúsculas, números e underscore</p>
           </div>
 
           <div>
@@ -56,7 +125,8 @@ export default function Signup() {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              disabled={isLoading}
               required
             />
           </div>
@@ -69,7 +139,9 @@ export default function Signup() {
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              disabled={isLoading}
+              minLength="6"
               required
             />
           </div>
@@ -82,16 +154,25 @@ export default function Signup() {
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-bee-yellow dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              disabled={isLoading}
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-bee-yellow hover:bg-bee-dark-yellow text-black font-semibold py-2 px-4 rounded-md transition-colors duration-300"
+            disabled={isLoading}
+            className="w-full bg-bee-yellow hover:bg-bee-dark-yellow text-black font-semibold py-2 px-4 rounded-md transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
-            Cadastrar
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-black mr-2"></div>
+                Criando conta...
+              </>
+            ) : (
+              'Criar Conta'
+            )}
           </button>
         </form>
 
@@ -99,7 +180,7 @@ export default function Signup() {
           <p className="text-gray-600 dark:text-gray-300">
             Já tem uma conta?{' '}
             <Link href="/login" className="text-bee-yellow hover:text-bee-dark-yellow font-semibold">
-              Entrar
+              Faça login
             </Link>
           </p>
         </div>

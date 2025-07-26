@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { saveLink } from '../utils/storage';
+import { linksService, userService } from '../lib/supabase';
 import { detectPlatform } from '../utils/helpers';
 
 export default function AddLinkModal({ isOpen, onClose }) {
@@ -13,12 +13,15 @@ export default function AddLinkModal({ isOpen, onClose }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.title.trim()) {
       newErrors.title = 'Título é obrigatório';
+    } else if (formData.title.trim().length < 2) {
+      newErrors.title = 'Título deve ter pelo menos 2 caracteres';
     }
 
     if (!formData.url.trim()) {
@@ -28,6 +31,10 @@ export default function AddLinkModal({ isOpen, onClose }) {
       if (!urlPattern.test(formData.url)) {
         newErrors.url = 'Por favor, insira uma URL válida';
       }
+    }
+
+    if (formData.description.trim() && formData.description.trim().length < 5) {
+      newErrors.description = 'Descrição deve ter pelo menos 5 caracteres';
     }
 
     setErrors(newErrors);
@@ -59,42 +66,58 @@ export default function AddLinkModal({ isOpen, onClose }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
       return;
     }
 
-    // Ensure URL has protocol
-    let url = formData.url;
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
+    setIsSubmitting(true);
+
+    try {
+      // Ensure URL has protocol
+      let url = formData.url.trim();
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+
+      const user = await userService.getCurrentUser();
+      if (!user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const linkData = {
+        title: formData.title.trim(),
+        description: formData.description.trim() || 'Clique para visitar',
+        url: url,
+        icon: formData.icon,
+        sort_order: 0 // Novo link vai para o topo
+      };
+
+      await linksService.createLink(user.id, linkData);
+      
+      // Dispatch custom event for real-time updates
+      window.dispatchEvent(new CustomEvent('linksUpdated'));
+
+      // Reset form and close modal
+      setFormData({
+        title: '',
+        description: '',
+        url: '',
+        icon: 'fas fa-link'
+      });
+      setErrors({});
+      onClose();
+
+    } catch (error) {
+      console.error('Erro ao criar link:', error);
+      setErrors({
+        submit: error.message || 'Erro ao criar link. Tente novamente.'
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const linkData = {
-      id: Date.now().toString(),
-      title: formData.title.trim(),
-      description: formData.description.trim() || 'Clique para visitar',
-      url: url,
-      icon: formData.icon,
-      createdAt: new Date().toISOString()
-    };
-
-    saveLink(linkData);
-    
-    // Dispatch custom event for real-time updates
-    window.dispatchEvent(new CustomEvent('linksUpdated'));
-
-    // Reset form and close modal
-    setFormData({
-      title: '',
-      description: '',
-      url: '',
-      icon: 'fas fa-link'
-    });
-    setErrors({});
-    onClose();
   };
 
   const handleCancel = () => {
@@ -119,11 +142,18 @@ export default function AddLinkModal({ isOpen, onClose }) {
           </h3>
           <button 
             onClick={handleCancel}
-            className="dark:text-gray-400 text-gray-600 hover:text-gray-800 dark:hover:text-gray-200"
+            disabled={isSubmitting}
+            className="dark:text-gray-400 text-gray-600 hover:text-gray-800 dark:hover:text-gray-200 disabled:opacity-50"
           >
             <i className="fas fa-times text-xl"></i>
           </button>
         </div>
+
+        {errors.submit && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {errors.submit}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -136,7 +166,8 @@ export default function AddLinkModal({ isOpen, onClose }) {
               value={formData.title}
               onChange={handleInputChange}
               placeholder="Ex: Meu Portfolio"
-              className={`w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent ${
+              disabled={isSubmitting}
+              className={`w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent disabled:opacity-50 ${
                 errors.title ? 'border-red-500' : 'border-gray-300'
               }`}
             />
@@ -155,8 +186,14 @@ export default function AddLinkModal({ isOpen, onClose }) {
               value={formData.description}
               onChange={handleInputChange}
               placeholder="Ex: Confira meus projetos e habilidades"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+              disabled={isSubmitting}
+              className={`w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent disabled:opacity-50 ${
+                errors.description ? 'border-red-500' : 'border-gray-300'
+              }`}
             />
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-1">{errors.description}</p>
+            )}
           </div>
 
           <div>
@@ -169,7 +206,8 @@ export default function AddLinkModal({ isOpen, onClose }) {
               value={formData.url}
               onChange={handleInputChange}
               placeholder="Ex: https://meuportfolio.com"
-              className={`w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent ${
+              disabled={isSubmitting}
+              className={`w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent disabled:opacity-50 ${
                 errors.url ? 'border-red-500' : 'border-gray-300'
               }`}
             />
@@ -192,7 +230,8 @@ export default function AddLinkModal({ isOpen, onClose }) {
                 value={formData.icon}
                 onChange={handleInputChange}
                 placeholder="Ex: fab fa-github"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent"
+                disabled={isSubmitting}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-bee-yellow focus:border-transparent disabled:opacity-50"
               />
             </div>
             <p className="text-xs dark:text-gray-400 text-gray-500 mt-1">
@@ -204,15 +243,24 @@ export default function AddLinkModal({ isOpen, onClose }) {
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 px-4 py-2 dark:bg-gray-600 bg-gray-200 dark:text-white text-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-2 dark:bg-gray-600 bg-gray-200 dark:text-white text-gray-800 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-bee-yellow text-bee-black rounded-lg hover:bg-bee-dark-yellow transition-colors font-medium"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-2 bg-bee-yellow text-bee-black rounded-lg hover:bg-bee-dark-yellow transition-colors font-medium disabled:opacity-50 flex items-center justify-center"
             >
-              Adicionar Link
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-bee-black mr-2"></div>
+                  Adicionando...
+                </>
+              ) : (
+                'Adicionar Link'
+              )}
             </button>
           </div>
         </form>

@@ -23,6 +23,11 @@ build/
 .env.test.local
 .env.production.local
 
+# Supabase
+.supabase/
+supabase/.env
+.env.example
+
 # IDE
 .vscode/
 .idea/

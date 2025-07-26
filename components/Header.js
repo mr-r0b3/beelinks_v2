@@ -2,42 +2,95 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { loadTheme, saveTheme } from '../utils/storage';
+import { authService, userService } from '../lib/supabase';
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/login');
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await authService.signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      // Forçar logout localmente mesmo com erro
+      router.push('/login');
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   useEffect(() => {
+    const initializeTheme = async () => {
+      try {
+        // Tentar carregar tema do usuário no Supabase
+        const user = await userService.getCurrentUser();
+        if (user) {
+          const userProfile = await userService.getUserProfile(user.id);
+          const savedTheme = userProfile?.theme_preference;
+          
+          if (savedTheme) {
+            const isDark = savedTheme === 'dark';
+            setIsDarkMode(isDark);
+            
+            if (isDark) {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar tema do usuário:', error);
+      }
 
-    const savedTheme = loadTheme();
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      // Fallback para tema do sistema/localStorage
+      const localTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = localTheme === 'dark' || (!localTheme && prefersDark);
+      
+      setIsDarkMode(isDark);
+      
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    initializeTheme();
+  }, []);
+
+  const toggleTheme = async () => {
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
     
-    setIsDarkMode(isDark);
+    const themeValue = newTheme ? 'dark' : 'light';
     
-    if (isDark) {
+    if (newTheme) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, []);
 
-  const toggleTheme = () => {
-    const newTheme = !isDarkMode;
-    setIsDarkMode(newTheme);
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark');
-      saveTheme('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      saveTheme('light');
+    // Salvar localmente para resposta imediata
+    localStorage.setItem('theme', themeValue);
+
+    try {
+      // Salvar no Supabase
+      const user = await userService.getCurrentUser();
+      if (user) {
+        await userService.updateProfile(user.id, {
+          theme_preference: themeValue
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao salvar tema no Supabase:', error);
+      // Tema já foi aplicado localmente, então não é crítico
     }
   };
 
@@ -63,11 +116,14 @@ export default function Header() {
         <button
           id="logout-btn"
           onClick={handleLogout}
-          className="flex items-center space-x-2 bg-bee-yellow hover:bg-bee-dark-yellow text-black px-4 py-2 rounded-lg transition-colors duration-300"
+          disabled={isLoggingOut}
+          className="flex items-center space-x-2 bg-bee-yellow hover:bg-bee-dark-yellow text-black px-4 py-2 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Sair da conta"
         >
-          <i id="logout-icon" className="fas fa-sign-out-alt"></i>
-          <span id="logout-text" className="font-medium">Sair</span>
+          <i id="logout-icon" className={`fas ${isLoggingOut ? 'fa-spinner fa-spin' : 'fa-sign-out-alt'}`}></i>
+          <span id="logout-text" className="font-medium">
+            {isLoggingOut ? 'Saindo...' : 'Sair'}
+          </span>
         </button>
       </div>
     </header>
