@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { analyticsService, userService } from '../lib/supabase';
 import Header from '../components/Header';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Profile from '../components/Profile';
@@ -21,6 +20,8 @@ export default function Home() {
     // Registrar visualização do perfil
     const trackProfileView = async () => {
       try {
+        // Import serviços dinamicamente para evitar problemas de build
+        const { analyticsService, userService } = await import('../lib/supabase');
         const user = await userService.getCurrentUser();
         if (user) {
           await analyticsService.trackProfileView(user.id);

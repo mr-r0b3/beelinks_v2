@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { authService, userService } from '../../lib/supabase';
 
 export default function Signup() {
   const router = useRouter();
@@ -36,6 +35,9 @@ export default function Signup() {
     }
 
     try {
+      // Import serviços dinamicamente para evitar problemas de build
+      const { authService, userService } = await import('../../lib/supabase');
+      
       // Verificar se username está disponível
       const isAvailable = await userService.isUsernameAvailable(formData.username);
       if (!isAvailable) {

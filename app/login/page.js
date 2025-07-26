@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { authService } from '../../lib/supabase';
 
 export default function Login() {
   const router = useRouter();
@@ -20,6 +19,8 @@ export default function Login() {
     setError('');
     
     try {
+      // Import authService dinamicamente para evitar problemas de build
+      const { authService } = await import('../../lib/supabase');
       const { user } = await authService.signIn(formData.email, formData.password);
       
       if (user) {

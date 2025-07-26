@@ -6,6 +6,21 @@ const nextConfig = {
     domains: [
       'pfutircafogpepbvhdgc.supabase.co', // Para imagens do Supabase
       'api.dicebear.com', // Para avatars gerados
+      // Adicione seu domínio do Supabase aqui se for diferente
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
   // Configuração para diferentes ambientes de deploy
