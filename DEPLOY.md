@@ -1,6 +1,50 @@
-# 🚀 Deploy do BeeLinks no GitHub Pages
+# 🚀 Deploy do BeeLinks
 
-## Problema Identificado
+## ⚡ Deploy no Vercel (Recomendado)
+
+### 1. Configurar Variáveis de Ambiente
+
+No painel do Vercel, vá para **Settings** → **Environment Variables** e adicione:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### 2. Deploy Automático
+
+O Vercel fará deploy automático a cada push para a branch `main`.
+
+### 3. Verificar Deploy
+
+Acesse: `https://seu-projeto.vercel.app`
+
+---
+
+## 🔧 Resolução de Problemas Vercel
+
+### Erro: "supabaseUrl is required"
+
+**Causa:** Variáveis de ambiente não configuradas no Vercel
+
+**Solução:**
+1. Vá para o projeto no Vercel
+2. Settings → Environment Variables
+3. Adicione as variáveis do Supabase
+4. Refaça o deploy
+
+### Build Falhando
+
+**Verificar:**
+- [ ] Variáveis de ambiente configuradas
+- [ ] Projeto Supabase ativo
+- [ ] Buckets e tabelas criadas
+
+---
+
+## 📦 Deploy no GitHub Pages (Alternativo)
+
+### Problema Identificado
 O Tailwind CSS não estava aparecendo no GitHub Pages porque:
 1. O GitHub Pages serve arquivos estáticos
 2. Não processa o Tailwind configurado localmente

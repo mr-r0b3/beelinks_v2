@@ -3,9 +3,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['pfutircafogpepbvhdgc.supabase.co'], // Para imagens do Supabase
+    domains: [
+      'pfutircafogpepbvhdgc.supabase.co', // Para imagens do Supabase
+      'api.dicebear.com', // Para avatars gerados
+    ],
   },
-  // Configuração específica para produção com GitHub Pages
+  // Configuração para diferentes ambientes de deploy
   ...(process.env.DEPLOY_TARGET === 'github-pages' && {
     output: 'export',
     trailingSlash: true,
@@ -14,6 +17,11 @@ const nextConfig = {
     },
     assetPrefix: '/beelinks_v2/',
     basePath: '/beelinks_v2',
+  }),
+  // Configuração para Vercel (padrão)
+  ...(process.env.VERCEL && {
+    poweredByHeader: false,
+    generateEtags: false,
   })
 }
 
