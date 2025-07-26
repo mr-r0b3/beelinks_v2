@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { linksService, userService } from '../lib/supabase';
+import { linksService, userService, supabase } from '../lib/supabase';
 import { detectPlatform } from '../utils/helpers';
 
 export default function AddLinkModal({ isOpen, onClose }) {
@@ -14,6 +14,75 @@ export default function AddLinkModal({ isOpen, onClose }) {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const syncUserAutomatically = async (authUser) => {
+    try {
+      // Gerar username único
+      const emailBase = authUser.email.split('@')[0];
+      const usernameBase = emailBase.toLowerCase().replace(/[^a-z0-9_]/g, '').substring(0, 20) || 'user';
+      
+      let username = usernameBase;
+      let counter = 1;
+      
+      // Verificar se username já existe
+      while (!(await userService.isUsernameAvailable(username))) {
+        username = usernameBase + counter;
+        counter++;
+      }
+
+      // Criar usuário na tabela public.users
+      const { data, error } = await supabase
+        .from('users')
+        .insert([{
+          id: authUser.id,
+          email: authUser.email,
+          username: username,
+          full_name: authUser.user_metadata?.full_name || '',
+          bio: 'Desenvolvedor | Criador de Conteúdo | Tech Enthusiast',
+          email_verified: !!authUser.email_confirmed_at,
+          created_at: authUser.created_at,
+          updated_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Criar configurações padrão
+      await supabase.from('user_settings').insert([{
+        user_id: authUser.id,
+        analytics_enabled: true,
+        public_analytics: false,
+        show_click_count: true,
+        allow_link_preview: true,
+        email_notifications: true,
+        show_avatar: true,
+        show_bio: true,
+        show_social_links: true
+      }]);
+
+      // Criar tema padrão
+      await supabase.from('themes').insert([{
+        user_id: authUser.id,
+        name: 'Tema BeeLinks',
+        is_default: true,
+        primary_color: '#FFD700',
+        secondary_color: '#FFC107',
+        background_color: '#1A1A1A',
+        text_color: '#FFFFFF',
+        accent_color: '#2D2D2D',
+        font_family: 'Inter',
+        border_radius: 12,
+        button_style: 'rounded'
+      }]);
+
+      console.log(`Usuário ${username} sincronizado automaticamente!`);
+      return data;
+    } catch (error) {
+      console.error('Erro na sincronização automática:', error);
+      throw error;
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -112,8 +181,58 @@ export default function AddLinkModal({ isOpen, onClose }) {
 
     } catch (error) {
       console.error('Erro ao criar link:', error);
+      
+      // Se for erro de chave estrangeira, tentar sincronização automática
+      if (error.message?.includes('foreign key constraint') || error.message?.includes('user_id_fkey')) {
+        console.log('Erro de chave estrangeira detectado, tentando sincronização automática...');
+        
+        try {
+          const user = await userService.getCurrentUser();
+          if (user) {
+            // Tentar sincronização automática
+            await syncUserAutomatically(user);
+            
+            // Tentar criar o link novamente
+            console.log('Tentando criar link novamente após sincronização...');
+            const linkData = {
+              title: formData.title.trim(),
+              description: formData.description.trim() || 'Clique para visitar',
+              url: url,
+              icon: formData.icon,
+              sort_order: 0
+            };
+
+            await linksService.createLink(user.id, linkData);
+            
+            // Sucesso após sincronização
+            window.dispatchEvent(new CustomEvent('linksUpdated'));
+            setFormData({
+              title: '',
+              description: '',
+              url: '',
+              icon: 'fas fa-link'
+            });
+            setErrors({});
+            onClose();
+            return; // Sair da função se deu certo
+          }
+        } catch (syncError) {
+          console.error('Erro na sincronização automática:', syncError);
+        }
+      }
+      
+      let errorMessage = 'Erro ao criar link. Tente novamente.';
+      
+      if (error.message?.includes('foreign key constraint')) {
+        errorMessage = 'Erro de sincronização de usuário. Recarregue a página ou acesse /debug para corrigir este problema.';
+      } else if (error.message?.includes('user_id_fkey')) {
+        errorMessage = 'Usuário não encontrado no sistema. Recarregue a página ou acesse /debug para sincronizar seu perfil.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setErrors({
-        submit: error.message || 'Erro ao criar link. Tente novamente.'
+        submit: errorMessage
       });
     } finally {
       setIsSubmitting(false);

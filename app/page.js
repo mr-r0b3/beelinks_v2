@@ -11,6 +11,7 @@ import AddLinkButton from '../components/AddLinkButton';
 import AddLinkModal from '../components/AddLinkModal';
 import LinksList from '../components/LinksList';
 import Footer from '../components/Footer';
+import SyncStatus from '../components/SyncStatus';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -72,6 +73,9 @@ export default function Home() {
             isOpen={showModal} 
             onClose={handleCloseModal} 
           />
+          
+          {/* Status de Sincronização */}
+          <SyncStatus />
         </div>
       </div>
     </ProtectedRoute>

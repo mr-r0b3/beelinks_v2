@@ -52,27 +52,48 @@ npm install @supabase/supabase-js
 No Supabase Dashboard:
 1. Vá em **SQL Editor**
 2. Clique em "New Query"
-3. Cole o conteúdo do arquivo `database/supabase-schema.sql`
+3. Cole o conteúdo do arquivo `database/supabase-schema-clean.sql`
 4. Execute (Run)
 
-### 2. **Configurar RLS (Row Level Security)**
+### 2. **Configurar Triggers de Autenticação**
+
+**IMPORTANTE**: Execute o arquivo `database/supabase-auth-triggers.sql`:
+1. Cole o conteúdo no SQL Editor
+2. Execute para criar triggers automáticos
+3. Isso resolve problemas de chave estrangeira ao criar links
+
+### 3. **Sincronizar Usuários Existentes**
+
+Se você já tem usuários no sistema:
+```sql
+SELECT public.sync_existing_users();
+```
+
+### 4. **Configurar RLS (Row Level Security)**
 
 As políticas já estão incluídas no schema. Verifique em:
 **Authentication** → **Policies**
 
-### 3. **Configurar Auth**
+### 5. **Configurar Auth**
 
 1. Vá em **Authentication** → **Settings**
 2. Configure:
    - **Site URL**: `http://localhost:3000` (desenvolvimento)
    - **Redirect URLs**: `http://localhost:3000/**`
 
-### 4. **Configurar Storage (Opcional)**
+### 6. **Configurar Storage (Opcional)**
 
 Para avatars e imagens:
 1. Vá em **Storage**
 2. Crie bucket: `avatars`
 3. Configurar política pública
+
+### 7. **Verificar Configuração**
+
+Use a página `/debug` na aplicação para:
+- Verificar sincronização de usuários
+- Diagnosticar problemas
+- Corrigir inconsistências automaticamente
 
 ## 🔄 Migração dos Dados
 

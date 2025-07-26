@@ -21,7 +21,6 @@ export default function ProtectedRoute({ children }) {
         
         setIsAuthenticated(true);
       } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
         router.push('/login');
       } finally {
         setIsLoading(false);
@@ -31,8 +30,9 @@ export default function ProtectedRoute({ children }) {
     checkAuth();
 
     // Escutar mudanças de autenticação
-    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = authService.onAuthStateChange((event, session) => {      
       if (event === 'SIGNED_OUT' || !session) {
+        setIsAuthenticated(false);
         router.push('/login');
       } else if (event === 'SIGNED_IN') {
         setIsAuthenticated(true);
