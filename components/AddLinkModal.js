@@ -96,8 +96,8 @@ export default function AddLinkModal({ isOpen, onClose }) {
     if (!formData.url.trim()) {
       newErrors.url = 'URL é obrigatória';
     } else {
-      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-      if (!urlPattern.test(formData.url)) {
+      const REGEX = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      if (!REGEX.test(formData.url)) {
         newErrors.url = 'Por favor, insira uma URL válida';
       }
     }
